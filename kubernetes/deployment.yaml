@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    name: eyecontactpredict
+  name: eyecontactpredict
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: eyecontactpredict
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        name: eyecontactpredict
+      name: eyecontactpredict
+    spec:
+      containers:
+        - env:
+            - name: DEBUG_MODE
+              value: '1'
+          image: >-
+            gcr.io/heimdallr-252513/github.com/chriswebb31/eyecontactpredictionmodel
+          imagePullPolicy: Always
+          name: eyecontactpredict
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          resources:
+            limits:
+              memory: 512Mi
+            requests:
+              memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: eyecontactpredict
+  name: eyecontactpredict
+  namespace: default
+spec:
+  clusterIP: 10.63.247.252
+  externalTrafficPolicy: Cluster
+  ports:
+    - nodePort: 31102
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    name: eyecontactpredict
+  sessionAffinity: None
+  type: LoadBalancer
