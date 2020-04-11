@@ -1,0 +1,30 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: eyecontactpredict
+  labels:
+    name: eyecontactpredict
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: eyecontactpredict
+  template:
+    metadata:
+      name: eyecontactpredict
+      labels:
+        name: eyecontactpredict
+    spec:
+      containers:
+        - name: eyecontactpredict
+          image: gcr.io/heimdallr-252513/eyecontactpredict
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: 256Mi
+            limits:
+              memory: 512Mi
+          env:
+            - name: DEBUG_MODE
+              value: "1"
