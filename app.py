@@ -13,6 +13,7 @@ model = pickle.load(open("categorized_model.sav", 'rb'))
 @app.route("/", methods=['GET', 'POST'])
 def predict():
     req = request.get_json()
+    print(req)
     sentence = req['sentence']
     prediction = int(model.predict([sentence])[0])
     return jsonify({'sentence':sentence, 'class':prediction})
